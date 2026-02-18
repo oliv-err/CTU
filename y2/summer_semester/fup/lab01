@@ -1,0 +1,68 @@
+#lang racket
+
+(define (my-even? n)
+  (cond
+    [(< n 0) (my-even? (- n))]
+    [(= n 0) #t]
+    [(= n 1) #f]
+    [else (my-even? (- n 2))]
+    )
+  )
+
+
+(define (string-repeat n str)
+  (if (<= n 0)
+      ""
+      (string-append str (string-repeat (- n 1) str))
+      )
+  )
+
+
+(define (string-repeat-2 n str [acc ""])
+  (if (<= n 0) acc
+      (string-repeat-2 (- n 1) str (string-append acc str))
+      )
+  )
+
+
+(define (integer->string i)
+  (string (integer->char i)))
+
+(define (char-inclusive-range fst lst)
+  (define first-index (char->integer fst))
+  (define last-index (char->integer lst))
+  (define step (if (< first-index last-index) 1 -1))
+  (define (iter k acc)
+    (if (= k last-index)
+        (string-append acc (integer->string k))
+        (iter (+ k step)
+              (string-append acc (integer->string k)))))
+  (iter first-index ""))
+
+
+(define (num-of-digits n [acc 1])
+  (define q (quotient n 10))
+  (if (= q 0)
+      acc
+      (num-of-digits q (+ acc 1))))
+
+
+(define (num->str n [radix 10])
+  (define r (remainder n radix))
+  (define init (if (< r 10)
+                   (char->integer #\0)
+                   (- (char->integer #\A) 10)))
+
+  (define rem-str
+    (string (integer->char (+ init r))))
+
+  (if (< n radix)
+      rem-str
+      (string-append (num->str (quotient n radix) radix) rem-str)))
+
+(num->str 52)
+(num->str 5 2)
+(num->str 255 16)
+
+
+  
